@@ -2,8 +2,9 @@ services:
   # 1. The Backend API
   - type: web
     name: face-attendance-backend
-    env: image
-    image: sharna1/face-attendance-backend:latest
+    runtime: image
+    image:
+      url: docker.io/sharna1/face-attendance-backend:latest
     plan: free
     autoDeploy: true
 
