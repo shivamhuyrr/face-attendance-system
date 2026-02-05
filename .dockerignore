@@ -1,0 +1,14 @@
+venv/
+__pycache__/
+.git/
+.env
+.pytest_cache/
+attendance_images/
+face_attendance.db
+frontend/node_modules/
+frontend/dist/
+coverage/
+*.pyc
+*.pyo
+*.pyd
+.DS_Store

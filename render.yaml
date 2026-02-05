@@ -2,9 +2,8 @@ services:
   # 1. The Backend API
   - type: web
     name: face-attendance-backend
-    env: docker
-    dockerContext: backend
-    dockerfilePath: backend/Dockerfile
+    env: image
+    image: docker.io/sharna1/face-attendance-backend:latest
     envVars:
       - key: PYTHON_VERSION
         value: 3.9.0

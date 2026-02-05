@@ -27,7 +27,10 @@ WORKDIR /app
 # We install libgomp1 which is often needed by dlib/numpy
 RUN apt-get update && apt-get install -y \
     libgomp1 \
-    libpacket-dev \
+    libgtk-3-0 \
+    libopenblas0 \
+    liblapack3 \
+    libx11-6 \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy installed packages from builder
