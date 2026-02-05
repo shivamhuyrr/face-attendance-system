@@ -40,11 +40,11 @@ graph TD
 
 ### 1. The Build Phase (One-Time Setup)
 
-This happens **before** any user visits the site.
+ This happens **before** any user visits the site.
 
-1. **Your Laptop**: You write code and run `docker build`. This creates a package containing Python, OpenCV, and your code.
-2. **Docker Hub**: You push this package to Docker Hub (like uploading a video to YouTube).
-3. **Render**: Render asks Docker Hub, "give me the latest package," downloads it, and runs it. Now your Backend is alive.
+ 1. **Your Laptop**: You run `push_to_dockerhub.bat`. This builds the Docker image locally (using your powerful CPU) to include heavy dependencies like `dlib` and `GTK3`.
+ 2. **Docker Hub**: The script pushes this pre-built package to your Docker Hub repository.
+ 3. **Render**: We configured Render to simply "Pull & Run" this image. This bypasses Render's weak CPU limits, preventing "Out of Memory" crashes during build.
 
 ### 2. The User Login Flow
 

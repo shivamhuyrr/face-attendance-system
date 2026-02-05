@@ -4,69 +4,72 @@ A scalable, reliable, and secure face attendance system built with **FastAPI** (
 
 ## 🚀 Key Features
 
-*   **Centralized Backend**: A robust REST API powered by FastAPI handling all user data and logs.
-*   **Scalable Architecture**: Client-Server model allows multiple camera units ("Eyes") to sync with one central server ("Brain").
-*   **Real-time Synchronization**: Camera units automatically fetch updated employee data on startup.
-*   **Spam Prevention**: Intelligent client-side caching prevents duplicate attendance logs.
-*   **Database**: SQLite integration (easily upgradeable to PostgreSQL) using SQLAlchemy.
+* **Centralized Backend**: A robust REST API powered by FastAPI handling all user data and logs.
+* **Scalable Architecture**: Client-Server model allows multiple camera units ("Eyes") to sync with one central server ("Brain").
+* **Real-time Synchronization**: Camera units automatically fetch updated employee data on startup.
+* **Spam Prevention**: Intelligent client-side caching prevents duplicate attendance logs.
+* **Database**: SQLite integration (easily upgradeable to PostgreSQL) using SQLAlchemy.
 
 ## 🛠️ Tech Stack
 
-*   **Backend**: Python, FastAPI, SQLAlchemy, Pydantic, Uvicorn
-*   **Client**: OpenCV, Face_Recognition, NumPy, Requests
-*   **Database**: SQLite
+* **Backend**: Python 3.9, FastAPI, Uvicorn
+* **Database**: Supabase (PostgreSQL)
+* **Storage**: Supabase Storage (S3-compatible)
+* **AI/ML**: `dlib`, `face_recognition`, `OpenCV` (Headless)
+* **Infrastructure**: Docker, Docker Compose, Render (Cloud)
 
 ## 📂 Project Structure
 
 ```
-├── backend/
-│   ├── app/
-│   │   ├── main.py       # API Entry point
-│   │   ├── models.py     # Database Models
-│   │   ├── schemas.py    # Pydantic Schemas
-│   │   └── crud.py       # Database Operations
-├── client/
-│   ├── camera_runner.py  # Main Camera Script
-│   └── client_utils.py   # API Communication Helpers
-├── requirements.txt
-└── README.md
+├── backend/              # FastAPI Application (Dockerized)
+│   ├── app/              # Source Code
+│   └── Dockerfile        # Production Docker Config
+├── frontend/             # React/Vite Application
+├── documentation/        # Architecture & Flows
+├── docker-compose.yml    # Local Orchestration
+├── push_to_dockerhub.bat # Deployment Script
+└── verify_deployment.py  # Health Check Script
 ```
 
 ## ⚡ Quick Start
 
-### 1. Installation
+### 1. Local Development (Docker)
+
+The easiest way to run the entire stack (Backend + Frontend):
 
 ```bash
-pip install -r requirements.txt
+docker-compose up -d --build
 ```
 
-### 2. Start the Backend Server
+This will start:
+* Backend at `http://localhost:8000`
+* Frontend at `http://localhost:5173`
 
-Open a terminal and run:
+### 2. Verify Health
+
+Run the included Python script to ensure everything is connected:
 
 ```bash
-uvicorn backend.app.main:app --reload
+python verify_deployment.py
 ```
 
-The server will start at `http://127.0.0.1:8000`. You can view the interactive API docs at `http://127.0.0.1:8000/docs`.
+## ☁️ Deployment
 
-### 3. Register a User
+### 1. Push to Docker Hub
 
-Use the API docs (`/docs`) to test the `POST /users/` endpoint.
-*   **Name**: Employee Name
-*   **File**: Upload a clear photo of the employee's face.
+We build images locally to avoid memory issues on free cloud tiers.
+Run the script and follow the prompts:
 
-The server will automatically detect the face, compute the encoding, and save it.
-
-### 4. Start the Camera Client
-
-Open a new terminal and run:
-
-```bash
-python client/camera_runner.py
+```bat
+.\push_to_dockerhub.bat
 ```
 
-The camera will open, sync with the server, and start logging attendance for recognized faces!
+### 2. Deploy to Render
+
+The `render.yaml` file configures the service to pull your image from Docker Hub.
+* Connect your repo to Render Blueprints.
+* Add Environment Variables: `SUPABASE_URL`, `SUPABASE_KEY`.
+* That's it!
 
 ## 🤝 Contribution
 
