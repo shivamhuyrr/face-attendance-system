@@ -3,10 +3,7 @@ services:
   - type: web
     name: face-attendance-backend
     env: image
-    image: docker.io/sharna1/face-attendance-backend:latest
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.9.0
+    image: sharna1/face-attendance-backend:latest
     plan: free
     autoDeploy: true
 
