@@ -10,7 +10,7 @@ from pathlib import Path
 import base64
 from datetime import datetime
 
-from . import models, schemas, crud, database
+from . import models, schemas, crud, database, security
 from .supabase_client import supabase # New: Import Supabase client
 import mimetypes
 
@@ -59,7 +59,8 @@ async def register_user(
     name: str = Form(...),
     department: str = Form(None),
     file: UploadFile = File(...),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    admin_user = Depends(security.get_current_admin)
 ):
     # 1. Save temp file
     temp_filename = f"temp_{file.filename}"
@@ -111,7 +112,8 @@ async def register_user(
 async def add_face_to_user(
     user_id: int,
     file: UploadFile = File(...),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    admin_user = Depends(security.get_current_admin)
 ):
     user = crud.get_user(db, user_id=user_id)
     if not user:
@@ -134,7 +136,7 @@ async def add_face_to_user(
             os.remove(temp_filename)
 
 @app.delete("/users/{user_id}")
-def delete_user(user_id: int, db: Session = Depends(get_db)):
+def delete_user(user_id: int, db: Session = Depends(get_db), admin_user = Depends(security.get_current_admin)):
     user = crud.get_user(db, user_id=user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -144,7 +146,7 @@ def delete_user(user_id: int, db: Session = Depends(get_db)):
     return {"message": f"User {user_id} deleted."}
 
 @app.put("/users/{user_id}", response_model=schemas.User)
-def update_user(user_id: int, name: str = Form(None), department: str = Form(None), db: Session = Depends(get_db)):
+def update_user(user_id: int, name: str = Form(None), department: str = Form(None), db: Session = Depends(get_db), admin_user = Depends(security.get_current_admin)):
     user = crud.get_user(db, user_id=user_id)
     if not user:
         raise HTTPException(status_code=404, detail="User not found")
@@ -194,7 +196,8 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
 def log_attendance(
     user_id: int = Form(...), 
     file: UploadFile = File(None),
-    db: Session = Depends(get_db)
+    db: Session = Depends(get_db),
+    current_user = Depends(security.get_current_user) # AUTHENTICATED USERS ONLY
 ):
     user = crud.get_user(db, user_id=user_id)
     if not user:
@@ -233,7 +236,7 @@ def read_attendance(skip: int = 0, limit: int = 100, db: Session = Depends(get_d
     return crud.get_attendance_logs(db, skip=skip, limit=limit)
 
 @app.delete("/reset/")
-def reset_database(db: Session = Depends(get_db)):
+def reset_database(db: Session = Depends(get_db), admin_user = Depends(security.get_current_admin)):
     """
     DANGER: Deletes all users and attendance logs.
     """
