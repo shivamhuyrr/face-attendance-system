@@ -1,23 +1,29 @@
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Navbar } from './components/Navbar';
-import { AdminDashboard } from './pages/AdminDashboard';
-import { UserDashboard } from './pages/UserDashboard';
+import { StudentDashboard } from './pages/StudentDashboard'; // Renamed
+import { FacultyDashboard } from './pages/FacultyDashboard'; // New
+import { SupportDashboard } from './pages/SupportDashboard';
+import { Login } from './pages/Login';
 
 function App() {
   return (
     <Router>
-      <div className="min-h-screen bg-gray-50 text-gray-900">
+      <div className="min-h-screen w-full bg-gray-50 text-gray-900 font-sans">
         <Navbar />
-        <main className="container mx-auto px-4 py-8">
+        <main className="container mx-auto px-4 py-8 max-w-7xl">
           <Routes>
-            <Route path="/" element={<Navigate to="/admin" replace />} />
-            <Route path="/admin" element={<AdminDashboard />} />
-            <Route path="/user" element={<UserDashboard />} />
+            <Route path="/login" element={<Login />} />
+            <Route path="/student" element={<StudentDashboard />} />
+            <Route path="/faculty" element={<FacultyDashboard />} />
+            <Route path="/support" element={<SupportDashboard />} />
+            {/* Default Redirect */}
+            <Route path="/" element={<Navigate to="/login" replace />} />
           </Routes>
         </main>
       </div>
     </Router>
   );
 }
+
 
 export default App;

@@ -1,6 +1,8 @@
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
+from sqlalchemy.orm import Session
 from .supabase_client import supabase
+from . import crud, database, models
 
 # Scheme for "Bearer <token>" header
 security = HTTPBearer()
@@ -33,19 +35,42 @@ def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(securit
             headers={"WWW-Authenticate": "Bearer"},
         )
 
-def get_current_admin(user = Depends(get_current_user)):
+def get_current_db_user(
+    token_user = Depends(get_current_user), 
+    db: Session = Depends(database.get_db)
+):
     """
-    Checks if the authenticated user is an Admin.
-    For now, we check if the email matches the hardcoded admin email.
-    TODO: Move this to a DB column or Env Var later.
+    Fetches the local DB user associated with the Supabase token.
     """
-    # REPLACE THIS WITH YOUR ACTUAL ADMIN EMAIL IN PRODUCTION
-    import os
-    ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@example.com") 
-    
-    if user.email != ADMIN_EMAIL:
+    if not token_user.email:
+        raise HTTPException(status_code=400, detail="Token missing email")
+        
+    user = crud.get_user_by_email(db, email=token_user.email)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found in local DB")
+    return user
+
+def get_current_faculty(user: models.User = Depends(get_current_db_user)):
+    if user.role not in [models.UserRole.FACULTY, models.UserRole.ADMIN]:
         raise HTTPException(
             status_code=status.HTTP_403_FORBIDDEN,
-            detail="Not enough permissions. Admin access required."
+            detail="Faculty access required"
         )
     return user
+
+def get_current_admin(user: models.User = Depends(get_current_db_user)):
+    # Fallback for hardcoded admin if needed (optional)
+    # But ideally rely on DB role now
+    if user.role != models.UserRole.ADMIN:
+        # Check env var fallback just in case migration hasn't run on the admin user
+        import os
+        ADMIN_EMAIL = os.environ.get("ADMIN_EMAIL", "admin@example.com")
+        if user.email == ADMIN_EMAIL:
+            return user
+
+        raise HTTPException(
+            status_code=status.HTTP_403_FORBIDDEN,
+            detail="Admin access required"
+        )
+    return user
+

@@ -1,5 +1,6 @@
 import { Link, useLocation } from 'react-router-dom';
-import { ShieldCheck, User } from 'lucide-react';
+import { ShieldCheck, User, BookOpen } from 'lucide-react';
+
 
 export function Navbar() {
     const location = useLocation();
@@ -14,14 +15,44 @@ export function Navbar() {
                     <span>SecureAttend</span>
                 </div>
                 <div className="flex space-x-4">
-                    <Link to="/admin" className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition ${isActive('/admin')}`}>
-                        <ShieldCheck className="w-4 h-4" />
-                        <span>Admin</span>
-                    </Link>
-                    <Link to="/user" className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition ${isActive('/user')}`}>
-                        <User className="w-4 h-4" />
-                        <span>My Logs</span>
-                    </Link>
+
+                    {/* Admin Links */}
+                    {location.pathname.startsWith('/admin') && (
+                        <Link to="/admin" className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition ${isActive('/admin')}`}>
+                            <ShieldCheck className="w-4 h-4" />
+                            <span>Admin Dashboard</span>
+                        </Link>
+                    )}
+
+                    {/* Student Links */}
+                    {location.pathname.startsWith('/student') && (
+                        <Link to="/student" className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition ${isActive('/student')}`}>
+                            <User className="w-4 h-4" />
+                            <span>My Dashboard</span>
+                        </Link>
+                    )}
+
+                    {/* Faculty Links */}
+                    {location.pathname.startsWith('/faculty') && (
+                        <Link to="/faculty" className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition ${isActive('/faculty')}`}>
+                            <BookOpen className="w-4 h-4" />
+                            <span>Faculty Portal</span>
+                        </Link>
+                    )}
+
+                    {/* Support Links */}
+                    {location.pathname.startsWith('/support') && (
+                        <Link to="/support" className={`flex items-center space-x-2 px-4 py-2 rounded-lg transition ${isActive('/support')}`}>
+                            <ShieldCheck className="w-4 h-4" />
+                            <span>Support Console</span>
+                        </Link>
+                    )}
+
+                    {/* Login Link (if at root or login) */}
+                    {(location.pathname === '/' || location.pathname.includes('/login')) && (
+                        <span className="text-gray-200 text-sm">Select a portal to login</span>
+                    )}
+
                 </div>
             </div>
         </nav>

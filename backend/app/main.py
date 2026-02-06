@@ -29,6 +29,13 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
+# Include Routers
+# Include Routers
+from .routers import announcements
+app.include_router(announcements.router)
+
+
 # --- DEBUGGING HANDLER ---
 from fastapi import Request
 from fastapi.responses import JSONResponse
@@ -41,6 +48,7 @@ async def debug_exception_handler(request: Request, exc: Exception):
         content={"detail": str(exc), "traceback": traceback.format_exc()},
     )
 # -------------------------
+
 
 # Dependency
 def get_db():
@@ -57,7 +65,10 @@ def read_root():
 @app.post("/users/", response_model=schemas.User)
 async def register_user(
     name: str = Form(...),
+    email: str = Form(None),
     department: str = Form(None),
+    roll_number: str = Form(None), # New
+    role: str = Form("student"), # New, default to student
     file: UploadFile = File(...),
     db: Session = Depends(get_db),
     admin_user = Depends(security.get_current_admin)
@@ -79,6 +90,12 @@ async def register_user(
             
         # 3. Serialize encoding
         encoding_bytes = pickle.dumps(encodings[0])
+        
+        # Validating Role
+        try:
+            user_role = models.UserRole(role)
+        except ValueError:
+            raise HTTPException(status_code=400, detail="Invalid role specified")
 
         # NEW: Upload to Supabase Storage
         public_url = None
@@ -100,7 +117,14 @@ async def register_user(
             print(f"Supabase Upload Failed: {e}")
         
         # 4. Create user in DB
-        user_data = schemas.UserCreate(name=name, department=department, profile_image_url=public_url)
+        user_data = schemas.UserCreate(
+            name=name, 
+            email=email, 
+            department=department, 
+            roll_number=roll_number,
+            role=user_role,
+            profile_image_url=public_url
+        )
         return crud.create_user(db=db, user=user_data, encoding_bytes=encoding_bytes)
     
     finally:
@@ -144,6 +168,13 @@ def delete_user(user_id: int, db: Session = Depends(get_db), admin_user = Depend
     db.delete(user)
     db.commit()
     return {"message": f"User {user_id} deleted."}
+
+@app.get("/users/by_email/", response_model=schemas.User)
+def read_user_by_email(email: str, db: Session = Depends(get_db)):
+    user = crud.get_user_by_email(db, email=email)
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    return user
 
 @app.put("/users/{user_id}", response_model=schemas.User)
 def update_user(user_id: int, name: str = Form(None), department: str = Form(None), db: Session = Depends(get_db), admin_user = Depends(security.get_current_admin)):
