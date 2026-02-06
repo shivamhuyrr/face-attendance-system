@@ -39,111 +39,121 @@ export function Login({ role = 'user' }: LoginProps) {
 
 
     return (
-        <div className="min-h-screen flex bg-gray-50">
-            {/* Left Side - Illustration */}
-            <div className="hidden lg:flex w-1/2 bg-blue-600 justify-center items-center relative overflow-hidden">
-                <div className="absolute inset-0 opacity-20">
-                    <svg className="h-full w-full" viewBox="0 0 100 100" preserveAspectRatio="none">
-                        <path d="M0 100 C 20 0 50 0 100 100 Z" fill="white" />
-                    </svg>
-                </div>
-                <div className="z-10 text-white text-center p-12">
-                    <div className="mb-8 flex justify-center">
-                        <ShieldCheck className="w-24 h-24 text-white opacity-90" />
-                    </div>
-                    <h1 className="text-4xl font-bold mb-4">SecureAttend</h1>
-                    <p className="text-blue-100 text-lg max-w-md mx-auto leading-relaxed">
-                        Next-generation biometric attendance management for the modern enterprise.
-                        Secure, fast, and reliable.
-                    </p>
-                    <div className="mt-12 flex justify-center gap-4 text-sm font-medium text-blue-200">
-                        <span>• Secure Access</span>
-                        <span>• Employee Management</span>
-                        <span>• Real-time Tracking</span>
-                    </div>
-                </div>
-            </div>
 
-            {/* Right Side - Login Form */}
-            <div className="w-full lg:w-1/2 flex items-center justify-center p-8">
-                <div className="w-full max-w-md bg-white p-10 rounded-2xl shadow-xl">
-                    <div className="mb-8">
-                        <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome!</h2>
-                        <p className="text-gray-500">
-                            {role === 'admin' ? 'Please sign in to the Admin Portal.' :
-                                role === 'support' ? 'Technical Support Access Only.' :
-                                    'Enter your credentials to view your logs.'}
+        <div className="min-h-screen bg-slate-50 flex items-center justify-center p-4">
+            {/* Container */}
+            <div className="w-full max-w-5xl bg-white rounded-2xl shadow-xl grid grid-cols-1 md:grid-cols-2 overflow-hidden min-h-[600px]">
+
+                {/* Left: Visual / Branding */}
+                <div className="hidden md:flex flex-col justify-center px-12 bg-gradient-to-br from-blue-800 to-blue-700 text-white relative">
+                    <div className="relative z-10">
+                        <div className="flex items-center gap-3 mb-8">
+                            <ShieldCheck className="w-10 h-10 text-blue-200" />
+                            <span className="text-xl font-bold tracking-wide uppercase">SecureAttend</span>
+                        </div>
+                        <h1 className="text-4xl font-bold leading-tight mb-4">
+                            University Access Portal
+                        </h1>
+                        <p className="text-blue-100 text-lg max-w-sm leading-relaxed">
+                            Secure platform for biometric attendance, academic development,
+                            and institutional workflows.
+                        </p>
+
+                        <div className="mt-12 space-y-4 text-sm font-medium text-blue-50">
+                            <div className="flex items-center gap-3">
+                                <span className="w-6 h-6 rounded-full bg-blue-600/50 flex items-center justify-center text-xs">✓</span>
+                                Face Recognition Attendance
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="w-6 h-6 rounded-full bg-blue-600/50 flex items-center justify-center text-xs">✓</span>
+                                Individual Development Plans
+                            </div>
+                            <div className="flex items-center gap-3">
+                                <span className="w-6 h-6 rounded-full bg-blue-600/50 flex items-center justify-center text-xs">✓</span>
+                                Faculty & Admin Controls
+                            </div>
+                        </div>
+                    </div>
+                    {/* Decorational Circle */}
+                    <div className="absolute top-[-20%] left-[-20%] w-[80%] h-[80%] bg-blue-600/20 rounded-full blur-3xl pointer-events-none"></div>
+                </div>
+
+                {/* Right: Login */}
+                <div className="flex flex-col justify-center px-8 sm:px-16 py-12">
+                    <div className="mb-10">
+                        <h2 className="text-3xl font-bold text-slate-900 mb-2">
+                            Sign in
+                        </h2>
+                        <p className="text-slate-500">
+                            {role === 'admin' ? 'Administrative Access Portal' :
+                                role === 'support' ? 'Support & Diagnostics Console' :
+                                    'Use credentials provided by your institution'}
                         </p>
                     </div>
 
                     {error && (
-                        <div className="mb-6 p-4 bg-red-50 text-red-600 rounded-lg flex items-center gap-3 text-sm">
+                        <div className="mb-6 p-4 bg-red-50 border border-red-100 text-red-600 rounded-lg flex items-center gap-3 text-sm animate-fade-in-down">
                             <AlertCircle className="w-5 h-5 flex-shrink-0" />
                             {error}
                         </div>
                     )}
 
-                    <form onSubmit={handleSignIn} className="space-y-4">
+                    <form onSubmit={handleSignIn} className="space-y-6">
+                        {/* Email / ID */}
                         <div>
-                            <label className="block text-sm font-semibold text-gray-700 mb-2">Email Address</label>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
-                                    </svg>
-                                </div>
-                                <input
-                                    type="email"
-                                    required
-                                    value={email}
-                                    onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                                    placeholder={role === 'admin' ? 'admin@company.com' : 'employee@company.com'}
-                                />
-                            </div>
+                            <label className="block text-sm font-medium text-slate-700 mb-1.5">
+                                University Email ID
+                            </label>
+                            <input
+                                type="email"
+                                value={email}
+                                onChange={(e) => setEmail(e.target.value)}
+                                placeholder="name@university.edu"
+                                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition text-slate-900 placeholder:text-slate-400"
+                                required
+                            />
                         </div>
 
+                        {/* Password */}
                         <div>
-                            <div className="flex justify-between items-center mb-2">
-                                <label className="block text-sm font-semibold text-gray-700">Password</label>
-                                <a href="#" className="text-sm text-blue-600 hover:text-blue-700 font-medium">Forgot?</a>
+                            <div className="flex justify-between items-center mb-1.5">
+                                <label className="block text-sm font-medium text-slate-700">
+                                    Password
+                                </label>
+                                <button type="button" className="text-sm text-blue-600 hover:text-blue-700 font-medium hover:underline">
+                                    Forgot password?
+                                </button>
                             </div>
-                            <div className="relative">
-                                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-gray-400">
-                                    <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                                    </svg>
-                                </div>
-                                <input
-                                    type="password"
-                                    required
-                                    value={password}
-                                    onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
-                                    placeholder="••••••••"
-                                />
-                            </div>
+                            <input
+                                type="password"
+                                value={password}
+                                onChange={(e) => setPassword(e.target.value)}
+                                placeholder="Enter your password"
+                                className="w-full px-4 py-3 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-blue-600 focus:border-transparent transition text-slate-900 placeholder:text-slate-400"
+                                required
+                            />
                         </div>
 
+                        {/* Button */}
                         <button
                             type="submit"
                             disabled={loading}
-                            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3.5 rounded-lg transition-colors shadow-lg shadow-blue-500/30 flex justify-center items-center"
+                            className="w-full bg-blue-700 hover:bg-blue-800 text-white py-3.5 rounded-xl font-semibold transition-all shadow-md hover:shadow-lg disabled:opacity-70 flex justify-center items-center gap-2"
                         >
                             {loading ? (
-                                <svg className="animate-spin h-5 w-5 text-white" fill="none" viewBox="0 0 24 24">
-                                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
-                                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                                </svg>
+                                <span className="w-5 h-5 border-2 border-white/20 border-t-white rounded-full animate-spin"></span>
                             ) : (
                                 "Sign In"
                             )}
                         </button>
                     </form>
 
-                    <div className="mt-8 text-center text-sm text-gray-500">
-                        Need help? <a href="#" className="text-blue-600 font-semibold hover:underline">Contact Support</a>
-                    </div>
+                    {/* Help */}
+                    <p className="mt-8 text-center text-xs text-slate-400">
+                        Protected by SecureAttend Systems v2.0
+                        <br />
+                        Trouble signing in? Contact IT Support.
+                    </p>
                 </div>
             </div>
         </div>
