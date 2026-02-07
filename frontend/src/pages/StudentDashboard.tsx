@@ -284,6 +284,35 @@ export function StudentDashboard() {
                             </div>
                         </div>
 
+                        {/* Mock Timetable Section */}
+                        <div className="bg-white/70 backdrop-blur-xl rounded-3xl shadow-xl border border-white/50 p-6 md:p-8">
+                            <h2 className="text-xl font-bold text-gray-900 mb-6 flex items-center gap-2">
+                                <span className="p-1.5 bg-purple-100 text-purple-600 rounded-lg">
+                                    <Clock className="w-5 h-5" />
+                                </span>
+                                Your Weekly Schedule
+                            </h2>
+                            <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+                                {['Mon', 'Tue', 'Wed', 'Thu', 'Fri'].map((day, i) => (
+                                    <div key={day} className={`p-4 rounded-2xl border ${i === 2 ? 'bg-blue-50 border-blue-200 shadow-md transform scale-105' : 'bg-white border-gray-100'}`}>
+                                        <p className={`text-xs font-bold uppercase mb-3 ${i === 2 ? 'text-blue-600' : 'text-gray-400'}`}>{day}</p>
+                                        <div className="space-y-3">
+                                            <div className="text-sm">
+                                                <p className="font-bold text-gray-800">Algorithms</p>
+                                                <p className="text-xs text-gray-500">10:00 AM</p>
+                                            </div>
+                                            {i % 2 === 0 && (
+                                                <div className="text-sm border-t border-gray-100 pt-2">
+                                                    <p className="font-bold text-gray-800">Database</p>
+                                                    <p className="text-xs text-gray-500">02:00 PM</p>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
                     </div>
                 </div>
             </div>

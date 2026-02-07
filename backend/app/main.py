@@ -201,6 +201,7 @@ def read_users(skip: int = 0, limit: int = 100, db: Session = Depends(get_db)):
             "id": u.id,
             "name": u.name,
             "department": u.department,
+            "role": u.role, # NEW: Include role
             "profile_image_url": u.profile_image_url, # NEW: Include image URL
             "created_at": u.created_at.isoformat() if u.created_at else None,
             "encodings": [] # NEW: List of encodings

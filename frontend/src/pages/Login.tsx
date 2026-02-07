@@ -152,7 +152,7 @@ export function Login({ role = 'user' }: LoginProps) {
                     <p className="mt-8 text-center text-xs text-slate-400">
                         Protected by SecureAttend Systems v2.0
                         <br />
-                        Trouble signing in? Contact IT Support.
+                        Trouble signing in? <button onClick={() => navigate('/contact-support')} className="text-blue-600 hover:text-blue-800 font-medium hover:underline transition-colors">Contact Support</button>.
                     </p>
                 </div>
             </div>
