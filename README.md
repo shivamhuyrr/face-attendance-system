@@ -28,8 +28,16 @@ A scalable, reliable, and secure face attendance system built with **FastAPI** (
 ├── documentation/        # Architecture & Flows
 ├── docker-compose.yml    # Local Orchestration
 ├── push_to_dockerhub.bat # Deployment Script
-└── verify_deployment.py  # Health Check Script
+├── verify_deployment.py  # Health Check Script
 ```
+
+## 📚 Detailed Documentation
+
+* [**System Architecture**](documentation/SYSTEM_ARCHITECTURE.md): High-level overview of the system, including the problem statement and real-life impact.
+* [**Workflow**](documentation/WORKFLOW.md): Step-by-step breakdown of user registration, attendance marking, and monitoring flows.
+* [**ER Diagram**](documentation/ER_DIAGRAM.md): Visual representation of the database schema and relationships.
+* [**Infrastructure Flow**](documentation/INFRASTRUCTURE_FLOW.md): detailed data flow between the client, server, and cloud services.
+* [**Tech Stack**](documentation/TECH_STACK.md): In-depth look at the technologies used in the frontend, backend, and AI components.
 
 ## ⚡ Quick Start
 
@@ -42,6 +50,7 @@ docker-compose up -d --build
 ```
 
 This will start:
+
 * Backend at `http://localhost:8000`
 * Frontend at `http://localhost:5173`
 
@@ -67,6 +76,7 @@ Run the script and follow the prompts:
 ### 2. Deploy to Render
 
 The `render.yaml` file configures the service to pull your image from Docker Hub.
+
 * Connect your repo to Render Blueprints.
 * Add Environment Variables: `SUPABASE_URL`, `SUPABASE_KEY`.
 * That's it!
